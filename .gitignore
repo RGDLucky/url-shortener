@@ -36,5 +36,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# server
+server/data/
+server/node_modules/
+
 # files
 Design_doc.md
