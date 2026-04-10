@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const { initDb } = require('./db');
 const linksRouter = require('./routes/links');
 const { redirectLink } = require('./controllers/linkController');
@@ -9,13 +10,21 @@ const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
 
+const clientDistPath = path.join(__dirname, '../../client/dist');
+
+app.use(express.static(clientDistPath));
+
 app.get('/', (req, res) => {
-    res.json({ message: 'URL Shortener API is running' });
+    res.sendFile(path.join(clientDistPath, 'index.html'));
 });
 
 app.use(linksRouter);
 
 app.get('/:shortCode', redirectLink);
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(clientDistPath, 'index.html'));
+});
 
 app.use(errorHandler);
 

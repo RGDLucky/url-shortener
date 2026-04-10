@@ -40,5 +40,9 @@ next-env.d.ts
 server/data/
 server/node_modules/
 
+# client
+client/dist/
+client/node_modules/
+
 # files
 Design_doc.md
