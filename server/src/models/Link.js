@@ -1,41 +1,30 @@
 const { getDb, saveDb } = require('../db');
 
+const BASE62_CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 const SHORT_CODE_LENGTH = 8;
-const MAX_GENERATION_ATTEMPTS = 10;
-const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+function encodeBase62(num) {
+    let result = '';
+    while (num > 0) {
+        result = BASE62_CHARS[num % 62] + result;
+        num = Math.floor(num / 62);
+    }
+    return result.padStart(SHORT_CODE_LENGTH, BASE62_CHARS[0]);
+}
+
+let lastId = 0;
+
+function getNextId() {
+    return ++lastId;
+}
 
 function generateShortCode() {
-    let result = '';
-    for (let i = 0; i < SHORT_CODE_LENGTH; i++) {
-        result += CHARS.charAt(Math.floor(Math.random() * CHARS.length));
-    }
-    return result;
-}
-
-function codeExists(shortCode) {
-    const db = getDb();
-    const stmt = db.prepare('SELECT 1 FROM links WHERE short_code = ?');
-    stmt.bind([shortCode]);
-    const exists = stmt.step();
-    stmt.free();
-    return exists;
-}
-
-function generateUniqueCode() {
-    for (let attempt = 1; attempt <= MAX_GENERATION_ATTEMPTS; attempt++) {
-        const code = generateShortCode();
-        if (!codeExists(code)) {
-            return code;
-        }
-        if (attempt === MAX_GENERATION_ATTEMPTS) {
-            throw new Error('Failed to generate unique short code after maximum attempts');
-        }
-    }
+    return encodeBase62(getNextId());
 }
 
 const Link = {
     create: (originalUrl) => {
-        const shortCode = generateUniqueCode();
+        const shortCode = generateShortCode();
         const db = getDb();
         db.run('INSERT INTO links (short_code, original_url) VALUES (?, ?)', [shortCode, originalUrl]);
         saveDb();
