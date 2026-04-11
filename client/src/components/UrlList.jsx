@@ -1,6 +1,11 @@
+/**
+ * Displays a list of all shortened URLs
+ * Shows loading state, empty state, or the list of links
+ */
 import UrlListItem from './UrlListItem';
 
 export default function UrlList({ links, onDelete, loading }) {
+    // Show loading state while fetching links
     if (loading) {
         return (
             <div className="text-center py-8 text-gray-500">
@@ -9,6 +14,7 @@ export default function UrlList({ links, onDelete, loading }) {
         );
     }
 
+    // Show empty state when no links exist
     if (links.length === 0) {
         return (
             <div className="text-center py-8 text-gray-500">

@@ -1,15 +1,26 @@
+/**
+ * Request handlers for link operations
+ * Validates input, calls model methods, and formats responses
+ */
 const Link = require('../models/Link');
 
 const BASE_URL = process.env.BASE_URL || 'http://localhost:3001';
 
+/**
+ * Create a new short URL
+ * Expects: { url: string }
+ * Returns: { shortCode, shortUrl, originalUrl }
+ */
 const createLink = (req, res, next) => {
     try {
         const { url } = req.body;
         
+        // Validate URL presence
         if (!url) {
             return res.status(400).json({ error: 'URL is required' });
         }
         
+        // Validate URL format using built-in URL constructor
         try {
             new URL(url);
         } catch {
@@ -28,6 +39,10 @@ const createLink = (req, res, next) => {
     }
 };
 
+/**
+ * Get all shortened URLs
+ * Returns: Array of link objects with shortUrl
+ */
 const getLinks = (req, res, next) => {
     try {
         const links = Link.findAll();
@@ -41,6 +56,10 @@ const getLinks = (req, res, next) => {
     }
 };
 
+/**
+ * Redirect short code to original URL
+ * Returns: 302 redirect to original URL
+ */
 const redirectLink = (req, res, next) => {
     try {
         const { shortCode } = req.params;
@@ -56,6 +75,11 @@ const redirectLink = (req, res, next) => {
     }
 };
 
+/**
+ * Delete a short URL by code
+ * Params: shortCode
+ * Returns: success message
+ */
 const deleteLink = (req, res, next) => {
     try {
         const { shortCode } = req.params;

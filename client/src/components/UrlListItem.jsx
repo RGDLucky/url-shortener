@@ -1,4 +1,9 @@
+/**
+ * Individual link item component
+ * Displays a single shortened URL with copy and delete actions
+ */
 export default function UrlListItem({ link, onDelete }) {
+    // Copy short URL to clipboard
     const handleCopy = async () => {
         try {
             await navigator.clipboard.writeText(link.shortUrl);
@@ -7,6 +12,7 @@ export default function UrlListItem({ link, onDelete }) {
         }
     };
 
+    // Delete link with confirmation dialog
     const handleDelete = () => {
         if (confirm('Delete this link?')) {
             onDelete(link.short_code);

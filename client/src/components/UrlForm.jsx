@@ -1,8 +1,13 @@
+/**
+ * URL input form component
+ * Allows users to enter a URL to be shortened
+ */
 import { useState } from 'react';
 
 export default function UrlForm({ onSubmit, loading }) {
     const [url, setUrl] = useState('');
 
+    // Handle form submission
     const handleSubmit = (e) => {
         e.preventDefault();
         if (url.trim()) {

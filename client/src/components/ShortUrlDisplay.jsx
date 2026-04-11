@@ -1,12 +1,17 @@
+/**
+ * Displays the newly created short URL with copy-to-clipboard functionality
+ */
 import { useState } from 'react';
 
 export default function ShortUrlDisplay({ shortUrl }) {
     const [copied, setCopied] = useState(false);
 
+    // Copy the short URL to clipboard
     const handleCopy = async () => {
         try {
             await navigator.clipboard.writeText(shortUrl);
             setCopied(true);
+            // Reset copied state after 2 seconds
             setTimeout(() => setCopied(false), 2000);
         } catch (err) {
             console.error('Failed to copy:', err);
